@@ -1,44 +1,11 @@
-/* Next.js / MUI integration here: https://github.com/mui-org/material-ui/tree/master/examples/nextjs */
-import Document, { Head, Main, NextScript } from "next/document";
-// styled-jsx included in Next.js by default
-import flush from "styled-jsx/server";
+import React from 'react';
+import Document, { Head, Main, NextScript } from 'next/document';
+import { ServerStyleSheets } from '@material-ui/core/styles';
 
-import { getSessionFromServer, getUserScript } from "../lib/auth";
+import { getSessionFromServer, getUserScript } from '../lib/auth';
+import { theme } from '../lib/getPageContext';
 
-class MyDocument extends Document {
-  static getInitialProps = ctx => {
-    const user = getSessionFromServer(ctx.req);
-
-    // Render app and page and get the context of the page with collected side effects.
-    let pageContext;
-    const page = ctx.renderPage(Component => {
-      const WrappedComponent = props => {
-        pageContext = props.pageContext;
-        return <Component {...props} />;
-      };
-      return WrappedComponent;
-    });
-
-    return {
-      ...user,
-      ...page,
-      pageContext,
-      // Styles fragment is rendered after the app and page rendering finish.
-      styles: (
-        <React.Fragment>
-          <style
-            id="jss-server-side"
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: pageContext.sheetsRegistry.toString()
-            }}
-          />
-          {flush() || null}
-        </React.Fragment>
-      )
-    };
-  };
-
+export default class MyDocument extends Document {
   render() {
     const { pageContext, user = {} } = this.props;
 
@@ -71,10 +38,7 @@ class MyDocument extends Document {
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
           />
           {/* PWA primary color */}
-          <meta
-            name="theme-color"
-            content={pageContext.theme.palette.primary.main}
-          />
+          <meta name="theme-color" content={theme.palette.primary.main} />
           <meta
             name="description"
             content="A social media site built with Next.js"
@@ -89,5 +53,51 @@ class MyDocument extends Document {
     );
   }
 }
+MyDocument.getInitialProps = async ctx => {
+  // Resolution order
+  //
+  // On the server:
+  // 1. app.getInitialProps
+  // 2. page.getInitialProps
+  // 3. document.getInitialProps
+  // 4. app.render
+  // 5. page.render
+  // 6. document.render
+  //
+  // On the server with error:
+  // 1. document.getInitialProps
+  // 2. app.render
+  // 3. page.render
+  // 4. document.render
+  //
+  // On the client
+  // 1. app.getInitialProps
+  // 2. page.getInitialProps
+  // 3. app.render
+  // 4. page.render
 
-export default MyDocument;
+  const user = getSessionFromServer(ctx.req);
+
+  // Render app and page and get the context of the page with collected side effects.
+  let pageContext;
+  const sheets = new ServerStyleSheets();
+  const originalRenderPage = ctx.renderPage;
+
+  const page = (ctx.renderPage = () =>
+    originalRenderPage({
+      enhanceApp: App => props => sheets.collect(<App {...props} />)
+    }));
+
+  const initialProps = await Document.getInitialProps(ctx);
+  return {
+    ...initialProps,
+    ...user,
+    ...page,
+    pageContext,
+    // Styles fragment is rendered after the app and page rendering finish.
+    styles: [
+      ...React.Children.toArray(initialProps.styles),
+      sheets.getStyleElement()
+    ]
+  };
+};
