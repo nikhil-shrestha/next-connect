@@ -3,12 +3,8 @@
 // import Tabs from "@material-ui/core/Tabs";
 // import Tab from "@material-ui/core/Tab";
 
-class ProfileTabs extends React.Component {
-  state = {};
-
-  render() {
-    return <div>ProfileTabs</div>;
-  }
-}
+const ProfileTabs = () => {
+  return <div>ProfileTabs</div>;
+};
 
 export default ProfileTabs;

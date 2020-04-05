@@ -1,21 +1,16 @@
-// import Typography from "@material-ui/core/Typography";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from '@material-ui/core/styles';
 
-class PostFeed extends React.Component {
-  state = {};
+const PostFeed = () => {
+  return <div>PostFeed</div>;
+};
 
-  render() {
-    return <div>PostFeed</div>;
-  }
-}
-
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing.unit * 2
+    paddingBottom: theme.spacing(2) * 2
   },
   title: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2) * 2
   }
-});
+}));
 
-export default withStyles(styles)(PostFeed);
+export default PostFeed;

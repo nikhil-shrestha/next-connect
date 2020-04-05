@@ -10,32 +10,28 @@
 // import Typography from "@material-ui/core/Typography";
 // import Snackbar from "@material-ui/core/Snackbar";
 // import AccountBox from "@material-ui/icons/AccountBox";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from '@material-ui/core/styles';
 
-class UserFeed extends React.Component {
-  state = {};
+const UserFeed = () => {
+  return <div>UserFeed</div>;
+};
 
-  render() {
-    return <div>UserFeed</div>;
-  }
-}
-
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing.unit
+    padding: theme.spacing(2)
   },
   avatar: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(2)
   },
   follow: {
-    right: theme.spacing.unit * 2
+    right: theme.spacing(2) * 2
   },
   snack: {
     color: theme.palette.primary.light
   },
   viewButton: {
-    verticalAlign: "middle"
+    verticalAlign: 'middle'
   }
-});
+}));
 
-export default withStyles(styles)(UserFeed);
+export default UserFeed;

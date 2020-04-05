@@ -1,41 +1,24 @@
-// import Badge from "@material-ui/core/Badge";
-// import Card from "@material-ui/core/Card";
-// import CardHeader from "@material-ui/core/CardHeader";
-// import CardContent from "@material-ui/core/CardContent";
-// import CardActions from "@material-ui/core/CardActions";
-// import Typography from "@material-ui/core/Typography";
-// import IconButton from "@material-ui/core/IconButton";
-// import Divider from "@material-ui/core/Divider";
-// import Avatar from "@material-ui/core/Avatar";
-// import Comment from "@material-ui/icons/Comment";
-// import DeleteTwoTone from "@material-ui/icons/DeleteTwoTone";
-// import Favorite from "@material-ui/icons/Favorite";
-// import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from '@material-ui/core/styles';
 
-class Post extends React.Component {
-  state = {};
+const Post = () => {
+  return <div>Post</div>;
+};
 
-  render() {
-    return <div>Post</div>;
-  }
-}
-
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   card: {
-    marginBottom: theme.spacing.unit * 3
+    marginBottom: theme.spacing(2 * 3)
   },
   cardContent: {
-    backgroundColor: "white"
+    backgroundColor: 'white'
   },
   cardHeader: {
-    paddingTop: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    backgroundColor: "rgba(11, 61, 130, 0.06)"
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    backgroundColor: 'rgba(11, 61, 130, 0.06)'
   },
   imageContainer: {
-    textAlign: "center",
-    padding: theme.spacing.unit
+    textAlign: 'center',
+    padding: theme.spacing(2)
   },
   image: {
     height: 200
@@ -46,6 +29,6 @@ const styles = theme => ({
   commentIcon: {
     color: theme.palette.commentIcon
   }
-});
+}));
 
-export default withStyles(styles)(Post);
+export default Post;

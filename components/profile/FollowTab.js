@@ -1,34 +1,34 @@
-// import Avatar from "@material-ui/core/Avatar";
-// import Typography from "@material-ui/core/Typography";
-// import GridList from "@material-ui/core/GridList";
-// import GridListTile from "@material-ui/core/GridListTile";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from '@material-ui/core/styles';
 
-const FollowTab = () => <div>FollowTab</div>;
+const FollowTab = () => {
+  const classes = useStyles();
 
-const styles = theme => ({
+  return <div>FollowTab</div>;
+};
+
+const useStyles = makeStyles(theme => ({
   root: {
-    marginTop: theme.spacing.unit * 2,
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden"
+    marginTop: theme.spacing(2) * 2,
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden'
   },
   bigAvatar: {
     width: 60,
     height: 60,
-    margin: "auto"
+    margin: 'auto'
   },
   gridList: {
     width: 300,
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       width: 400
     }
   },
   tileText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 10
   }
-});
+}));
 
-export default withStyles(styles)(FollowTab);
+export default FollowTab;
