@@ -48,7 +48,7 @@ router.get('/api/auth/signout', signout);
 /**
  * USER ROUTES: /api/users
  */
-router.param('/api/userId', getUserById);
+router.param('userId', getUserById);
 
 router
   .route('/api/users/:userId')
@@ -81,7 +81,7 @@ router.put(
 /**
  * POST ROUTES: /api/posts
  */
-router.param('/api/postId', postController.getPostById);
+router.param('postId', postController.getPostById);
 
 router.put(
   '/api/posts/like',
