@@ -3,7 +3,7 @@
 // import Typography from "@material-ui/core/Typography";
 // import Grid from "@material-ui/core/Grid";
 // import Button from "@material-ui/core/Button";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from '@material-ui/core/styles';
 
 class Index extends React.Component {
   state = {};
@@ -13,24 +13,24 @@ class Index extends React.Component {
   }
 }
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 10,
-    paddingLeft: theme.spacing.unit * 5,
-    [theme.breakpoints.down("sm")]: {
-      paddingRight: theme.spacing.unit * 5
+    paddingTop: theme.spacing(2) * 10,
+    paddingLeft: theme.spacing(2) * 5,
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: theme.spacing(2) * 5
     }
   },
   progressContainer: {
-    height: "80vh"
+    height: '80vh'
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2) * 2,
     color: theme.palette.secondary.light
   },
   drawerContainer: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
     }
   },
   drawer: {
@@ -41,14 +41,14 @@ const styles = theme => ({
     width: 350
   },
   fabButton: {
-    margin: theme.spacing.unit * 3
+    margin: theme.spacing(2) * 3
   },
   heroContent: {
     maxWidth: 600,
-    paddingTop: theme.spacing.unit * 8,
-    paddingBottom: theme.spacing.unit * 6,
-    margin: "0 auto"
+    paddingTop: theme.spacing(2) * 8,
+    paddingBottom: theme.spacing(2) * 6,
+    margin: '0 auto'
   }
-});
+}));
 
-export default withStyles(styles)(Index);
+export default Index;

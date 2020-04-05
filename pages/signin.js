@@ -7,7 +7,7 @@
 // import Button from "@material-ui/core/Button";
 // import Snackbar from "@material-ui/core/Snackbar";
 // import Lock from "@material-ui/icons/Lock";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from '@material-ui/core/styles';
 
 class Signin extends React.Component {
   state = {};
@@ -17,39 +17,39 @@ class Signin extends React.Component {
   }
 }
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    width: "auto",
-    display: "block",
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up("md")]: {
+    width: 'auto',
+    display: 'block',
+    marginLeft: theme.spacing(2) * 3,
+    marginRight: theme.spacing(2) * 3,
+    [theme.breakpoints.up('md')]: {
       width: 400,
-      marginLeft: "auto",
-      marginRight: "auto"
+      marginLeft: 'auto',
+      marginRight: 'auto'
     }
   },
   paper: {
-    marginTop: theme.spacing.unit * 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: theme.spacing.unit * 2
+    marginTop: theme.spacing(2) * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(2) * 2
   },
   avatar: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(2),
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%",
-    marginTop: theme.spacing.unit
+    width: '100%',
+    marginTop: theme.spacing(2)
   },
   submit: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2) * 2
   },
   snack: {
     color: theme.palette.protectedTitle
   }
-});
+}));
 
-export default withStyles(styles)(Signin);
+export default Signin;

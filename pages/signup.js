@@ -14,7 +14,7 @@
 // import Slide from "@material-ui/core/Slide";
 // import Gavel from "@material-ui/icons/Gavel";
 // import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
-import withStyles from "@material-ui/core/styles/withStyles";
+import withStyles from '@material-ui/core/styles/withStyles';
 
 class Signup extends React.Component {
   state = {};
@@ -26,45 +26,45 @@ class Signup extends React.Component {
 
 const styles = theme => ({
   root: {
-    width: "auto",
-    display: "block",
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up("md")]: {
+    width: 'auto',
+    display: 'block',
+    marginLeft: theme.spacing(2) * 3,
+    marginRight: theme.spacing(2) * 3,
+    [theme.breakpoints.up('md')]: {
       width: 400,
-      marginLeft: "auto",
-      marginRight: "auto"
+      marginLeft: 'auto',
+      marginRight: 'auto'
     }
   },
   paper: {
-    marginTop: theme.spacing.unit * 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: theme.spacing.unit * 2
+    marginTop: theme.spacing(2) * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(2) * 2
   },
   signinLink: {
-    textDecoration: "none",
-    color: "white"
+    textDecoration: 'none',
+    color: 'white'
   },
   avatar: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(2),
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%",
-    marginTop: theme.spacing.unit
+    width: '100%',
+    marginTop: theme.spacing(2)
   },
   submit: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2) * 2
   },
   snack: {
     color: theme.palette.secondary.light
   },
   icon: {
-    padding: "0px 2px 2px 0px",
-    verticalAlign: "middle",
-    color: "green"
+    padding: '0px 2px 2px 0px',
+    verticalAlign: 'middle',
+    color: 'green'
   }
 });
 
