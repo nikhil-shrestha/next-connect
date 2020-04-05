@@ -7,7 +7,21 @@ const {
   signin,
   signout
 } = require('../controllers/authController');
-const userController = require('../controllers/userController');
+const {
+  getUsers,
+  getUserById,
+  getAuthUser,
+  getUserProfile,
+  deleteUser,
+  getUserFeed,
+  addFollowing,
+  addFollower,
+  deleteFollowing,
+  deleteFollower,
+  uploadAvatar,
+  resizeAvatar,
+  updateUser
+} = require('../controllers/userController');
 const postController = require('../controllers/postController');
 
 const router = express.Router();
@@ -34,41 +48,34 @@ router.get('/api/auth/signout', signout);
 /**
  * USER ROUTES: /api/users
  */
-router.param('/api/userId', userController.getUserById);
+router.param('/api/userId', getUserById);
 
 router
   .route('/api/users/:userId')
-  .get(userController.getAuthUser)
+  .get(getAuthUser)
   .put(
     checkAuth,
-    userController.uploadAvatar,
-    catchErrors(userController.resizeAvatar),
-    catchErrors(userController.updateUser)
+    uploadAvatar,
+    catchErrors(resizeAvatar),
+    catchErrors(updateUser)
   )
-  .delete(checkAuth, catchErrors(userController.deleteUser));
+  .delete(checkAuth, catchErrors(deleteUser));
 
-router.get('/api/users', userController.getUsers);
-router.get(
-  '/api/users/profile/:userId',
-  catchErrors(userController.getUserProfile)
-);
-router.get(
-  '/api/users/feed/:userId',
-  checkAuth,
-  catchErrors(userController.getUserFeed)
-);
+router.get('/api/users', getUsers);
+router.get('/api/users/profile/:userId', catchErrors(getUserProfile));
+router.get('/api/users/feed/:userId', checkAuth, catchErrors(getUserFeed));
 
 router.put(
   '/api/users/follow',
   checkAuth,
-  catchErrors(userController.addFollowing),
-  catchErrors(userController.addFollower)
+  catchErrors(addFollowing),
+  catchErrors(addFollower)
 );
 router.put(
   '/api/users/unfollow',
   checkAuth,
-  catchErrors(userController.deleteFollowing),
-  catchErrors(userController.deleteFollower)
+  catchErrors(deleteFollowing),
+  catchErrors(deleteFollower)
 );
 
 /**
