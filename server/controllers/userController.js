@@ -20,25 +20,19 @@ exports.getAuthUser = (req, res) => {
 };
 
 exports.getUserById = async (req, res, next, id) => {
-  console.log('@param userID', id);
   const user = await User.findOne({ _id: id });
   req.profile = user;
 
-  console.log('__@profile_set');
-
   const profileId = mongoose.Types.ObjectId(req.profile._id);
 
-  if (profileId.equals(req.user._id)) {
-    console.log('@__EQUAL');
+  if (req.user && profileId.equals(req.user._id)) {
     req.isAuthUser = true;
     return next();
   }
-  console.log('@__NOT_EQUAL');
   next();
 };
 
 exports.getUserProfile = (req, res) => {
-  console.log('@__getUserProfile');
   if (!req.profile) {
     return res.status(400).json({
       message: 'User not found'
