@@ -50,6 +50,20 @@ router.get('/api/auth/signout', signout);
  */
 router.param('userId', getUserById);
 
+router.put(
+  '/api/users/follow',
+  checkAuth,
+  catchErrors(addFollowing),
+  catchErrors(addFollower)
+);
+
+router.put(
+  '/api/users/unfollow',
+  checkAuth,
+  catchErrors(deleteFollowing),
+  catchErrors(deleteFollower)
+);
+
 router
   .route('/api/users/:userId')
   .get(getAuthUser)
@@ -64,19 +78,6 @@ router
 router.get('/api/users', getUsers);
 router.get('/api/users/profile/:userId', getUserProfile);
 router.get('/api/users/feed/:userId', checkAuth, catchErrors(getUserFeed));
-
-router.put(
-  '/api/users/follow',
-  checkAuth,
-  catchErrors(addFollowing),
-  catchErrors(addFollower)
-);
-router.put(
-  '/api/users/unfollow',
-  checkAuth,
-  catchErrors(deleteFollowing),
-  catchErrors(deleteFollower)
-);
 
 /**
  * POST ROUTES: /api/posts
