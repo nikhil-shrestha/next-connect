@@ -62,7 +62,7 @@ router
   .delete(checkAuth, catchErrors(deleteUser));
 
 router.get('/api/users', getUsers);
-router.get('/api/users/profile/:userId', catchErrors(getUserProfile));
+router.get('/api/users/profile/:userId', getUserProfile);
 router.get('/api/users/feed/:userId', checkAuth, catchErrors(getUserFeed));
 
 router.put(
