@@ -67,6 +67,16 @@ exports.signin = (req, res, next) => {
   })(req, res, next);
 };
 
-exports.signout = () => {};
+exports.signout = (req, res) => {
+  res.clearCookie('nexrt-cookie.sid');
+  req.logout();
+  res.json({ message: 'You are now signed out' });
+};
 
-exports.checkAuth = () => {};
+exports.checkAuth = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.redirect('/signin');
+};
