@@ -80,5 +80,3 @@ const useStyles = makeStyles(theme => ({
     display: 'none'
   }
 }));
-
-export default EditProfile;

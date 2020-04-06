@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core/styles';
 // import Typography from "@material-ui/core/Typography";
 // import Avatar from "@material-ui/core/Avatar";
 // import FormControl from "@material-ui/core/FormControl";
@@ -7,15 +8,10 @@
 // import Button from "@material-ui/core/Button";
 // import Snackbar from "@material-ui/core/Snackbar";
 // import Lock from "@material-ui/icons/Lock";
-import { makeStyles } from '@material-ui/core/styles';
 
-class Signin extends React.Component {
-  state = {};
-
-  render() {
-    return <div>Signin</div>;
-  }
-}
+const Signin = () => {
+  return <div>Signin</div>;
+};
 
 const useStyles = makeStyles(theme => ({
   root: {

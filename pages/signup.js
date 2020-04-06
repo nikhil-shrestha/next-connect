@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core/styles';
 // import Typography from "@material-ui/core/Typography";
 // import Avatar from "@material-ui/core/Avatar";
 // import FormControl from "@material-ui/core/FormControl";
@@ -14,17 +15,13 @@
 // import Slide from "@material-ui/core/Slide";
 // import Gavel from "@material-ui/icons/Gavel";
 // import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
-import withStyles from '@material-ui/core/styles/withStyles';
 
-class Signup extends React.Component {
-  state = {};
+const Signup = () => {
 
-  render() {
     return <div>Signup</div>;
-  }
 }
 
-const styles = theme => ({
+const  useStyles = makeStyles(theme => ({
   root: {
     width: 'auto',
     display: 'block',
@@ -66,6 +63,6 @@ const styles = theme => ({
     verticalAlign: 'middle',
     color: 'green'
   }
-});
+}));
 
-export default withStyles(styles)(Signup);
+export default Signup;

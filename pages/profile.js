@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core/styles';
 // import Paper from "@material-ui/core/Paper";
 // import List from "@material-ui/core/List";
 // import ListItem from "@material-ui/core/ListItem";
@@ -10,7 +11,6 @@
 // import CircularProgress from "@material-ui/core/CircularProgress";
 // import Divider from "@material-ui/core/Divider";
 // import Edit from "@material-ui/icons/Edit";
-import { makeStyles } from '@material-ui/core/styles';
 
 class Profile extends React.Component {
   state = {};
