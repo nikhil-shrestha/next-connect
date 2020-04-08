@@ -5,12 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 // import Grid from "@material-ui/core/Grid";
 // import Button from "@material-ui/core/Button";
 
-class Index extends React.Component {
-  state = {};
+import { authInitialProps } from '../lib/auth';
 
-  render() {
-    return <div>Index</div>;
-  }
+export default function Index() {
+  return <div>Index</div>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -51,4 +49,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default Index;
+Index.getInitialProps = authInitialProps();

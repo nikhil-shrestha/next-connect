@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import ShareOutlined from '@material-ui/icons/ShareOutlined';
 
 import ActiveLink from './ActiveLink';
+import { signoutUser } from '../lib/auth';
 
 const Navbar = ({ router, pageProps: { auth } }) => {
   const classes = useStyles();
@@ -35,7 +36,9 @@ const Navbar = ({ router, pageProps: { auth } }) => {
             <Button>
               <ActiveLink href="/profile">Profile</ActiveLink>
             </Button>
-            <Button variant="outlined">SignOut</Button>
+            <Button variant="outlined" onClick={signoutUser}>
+              SignOut
+            </Button>
           </div>
         ) : (
           <div>

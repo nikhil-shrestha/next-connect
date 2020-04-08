@@ -17,6 +17,8 @@ import { makeStyles } from '@material-ui/core/styles';
 // import FaceTwoTone from "@material-ui/icons/FaceTwoTone";
 // import EditSharp from "@material-ui/icons/EditSharp";
 
+import { authInitialProps } from '../lib/auth';
+
 export default function EditProfile() {
   const classes = useStyles();
 
@@ -80,3 +82,5 @@ const useStyles = makeStyles(theme => ({
     display: 'none'
   }
 }));
+
+EditProfile.getInitialProps = authInitialProps(true);

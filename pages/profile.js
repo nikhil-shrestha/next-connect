@@ -12,13 +12,11 @@ import { makeStyles } from '@material-ui/core/styles';
 // import Divider from "@material-ui/core/Divider";
 // import Edit from "@material-ui/icons/Edit";
 
-class Profile extends React.Component {
-  state = {};
+import { authInitialProps } from '../lib/auth';
 
-  render() {
-    return <div>Profile</div>;
-  }
-}
+const Profile = () => {
+  return <div>Profile</div>;
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,5 +45,7 @@ const useStyles = makeStyles(theme => ({
     margin: 10
   }
 }));
+
+Profile.getInitialProps = authInitialProps(true);
 
 export default Profile;
