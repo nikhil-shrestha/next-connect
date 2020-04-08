@@ -31,17 +31,18 @@ exports.validate = (req, res, next) => {
   }
   const firstError = errors.array().map(err => err.msg)[0];
 
-  return res.status(422).json({
-    errors: firstError
-  });
+  return res.status(422).json(firstError);
 };
 
 exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
 
+  console.log({ name, email, password });
+
   const user = await new User({ name, email, password });
   await User.register(user, password, (err, user) => {
     if (err) {
+      console.log(err.message);
       return res.status(500).send(err.message);
     }
     res.json(user);

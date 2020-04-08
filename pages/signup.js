@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
@@ -18,6 +19,10 @@ import VerifiedUserTwoTone from '@material-ui/icons/VerifiedUserTwoTone';
 
 import { signupUser } from '../lib/auth';
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const Signup = () => {
   const classes = useStyles();
   const [formData, setFormData] = React.useState({
@@ -25,8 +30,15 @@ const Signup = () => {
     email: '',
     password: ''
   });
+  const [error, setError] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [openError, setOpenError] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = React.useState(false);
+  const [createdUser, setCreatedUser] = React.useState('');
 
   const { name, email, password } = formData;
+
+  const handleClose = () => setOpenError(false);
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -38,6 +50,8 @@ const Signup = () => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    setIsLoading(true);
+    setError('');
 
     const user = {
       name,
@@ -47,7 +61,21 @@ const Signup = () => {
 
     console.log(user);
 
-    signupUser(user);
+    signupUser(user)
+      .then(createdNewUser => {
+        setCreatedUser(createdNewUser);
+        setError('');
+        setOpenSuccess(true);
+        setIsLoading(false);
+      })
+      .catch(showError);
+  };
+
+  const showError = err => {
+    const errorMsg = (err.response && err.response.data) || err.message;
+    setError(errorMsg);
+    setOpenError(true);
+    setIsLoading(false);
   };
 
   return (
@@ -89,16 +117,53 @@ const Signup = () => {
             />
           </FormControl>
           <Button
+            disabled={isLoading}
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
           >
-            Sign up
+            {isLoading ? 'Signing up...' : 'Sign up'}
           </Button>
         </form>
+
+        {error && (
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            open={openError}
+            onClose={handleClose}
+            autoHideDuration={5000}
+            message={<span className={classes.snack}>{error}</span>}
+          />
+        )}
       </Paper>
+
+      <Dialog
+        open={openSuccess}
+        disableBackdropClick={true}
+        TransitionComponent={Transition}
+      >
+        <DialogTitle>
+          <VerifiedUserTwoTone className={classes.icon} />
+          New Account
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            User {createdUser} successfully created!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" variant="contained">
+            <Link href="/signin">
+              <a className={classes.signinLink}>Signin</a>
+            </Link>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
