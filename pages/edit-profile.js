@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Router from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import FormControl from '@material-ui/core/FormControl';
@@ -14,12 +15,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import VerifiedUserTwoTone from '@material-ui/icons/VerifiedUserTwoTone';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Slide from '@material-ui/core/Slide';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import FaceTwoTone from '@material-ui/icons/FaceTwoTone';
 import EditSharp from '@material-ui/icons/EditSharp';
 
 import { authInitialProps } from '../lib/auth';
 import { getAuthUser, updateUser } from '../lib/api';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function EditProfile(props) {
   const classes = useStyles();
@@ -36,6 +42,10 @@ export default function EditProfile(props) {
 
   const [isLoading, setIsLoading] = useState(true);
   const [avatarPreview, setAvatarPreview] = useState('');
+  const [error, setError] = React.useState('');
+  const [openSuccess, setOpenSuccess] = React.useState(false);
+  const [updatedUser, setUpdatedUser] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const { name, email, about, avatar } = formData;
 
@@ -55,6 +65,8 @@ export default function EditProfile(props) {
     }
     loadUser();
   }, []);
+
+  const handleClose = () => setOpenError(false);
 
   const onChangePicture = (e) => {
     console.log('picture: ', image);
@@ -76,8 +88,9 @@ export default function EditProfile(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const userData = new FormData();
 
+    setIsSaving(true);
+    const userData = new FormData();
     userData.append('name', name);
     userData.append('email', email);
     userData.append('about', about);
@@ -86,10 +99,21 @@ export default function EditProfile(props) {
     }
 
     updateUser(formData._id, userData)
-      .then((updatedUser) => {
-        console.log(updatedUser);
+      .then((updated) => {
+        console.log(updated);
+        setIsSaving(false);
+        setUpdatedUser(updated);
+        setOpenSuccess(true);
+        setTimeout(() => Router.push(`/profile/${formData._id}`), 6000);
       })
-      .catch((err) => console.log(err));
+      .catch(showError);
+  };
+
+  const showError = (err) => {
+    const errorMsg = (err.response && err.response.data) || err.message;
+    setError(errorMsg);
+    setOpenError(true);
+    setIsSaving(false);
   };
 
   return (
@@ -158,15 +182,44 @@ export default function EditProfile(props) {
           <Button
             type="submit"
             fullWidth
-            disabled={isLoading}
+            disabled={isSaving || isLoading}
             variant="contained"
             color="primary"
             className={classes.submit}
           >
-            {isLoading ? 'Saving...' : 'Save'}
+            {isSaving ? 'Saving...' : 'Save'}
           </Button>
         </form>
       </Paper>
+
+      {error && (
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={openError}
+          onClose={handleClose}
+          autoHideDuration={5000}
+          message={<span className={classes.snack}>{error}</span>}
+        />
+      )}
+
+      <Dialog
+        open={openSuccess}
+        disableBackdropClick={true}
+        TransitionComponent={Transition}
+      >
+        <DialogTitle>
+          <VerifiedUserTwoTone className={classes.icon} />
+          Profile Updated
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            User {updatedUser && updateUser.name} was successfully updated!
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
