@@ -12,7 +12,7 @@ exports.getUsers = async (req, res) => {
 exports.getAuthUser = (req, res) => {
   if (!req.isAuthUser) {
     return res.status(400).json({
-      message: 'You are unauthenticated. Please signin or signup'
+      message: 'You are unauthenticated. Please signin or signup',
     });
   }
 
@@ -35,7 +35,7 @@ exports.getUserById = async (req, res, next, id) => {
 exports.getUserProfile = (req, res) => {
   if (!req.profile) {
     return res.status(400).json({
-      message: 'User not found'
+      message: 'User not found',
     });
   }
 
@@ -57,7 +57,7 @@ const avatarUploadOptions = {
   storage: multer.memoryStorage(),
   limits: {
     // storing image file upto 1MB
-    fileSize: 1024 * 1024 * 1
+    fileSize: 1024 * 1024 * 1,
   },
   fileFilter: (req, file, next) => {
     if (file.mimetype.startsWith('image/')) {
@@ -65,7 +65,7 @@ const avatarUploadOptions = {
     } else {
       next(null, false);
     }
-  }
+  },
 };
 
 exports.uploadAvatar = multer(avatarUploadOptions).single('avatar');
@@ -76,17 +76,18 @@ exports.resizeAvatar = async (req, res, next) => {
   }
 
   const extension = req.file.mimetype.split('/')[1];
-  req.body.avatar = `/public/static/uploads/avatars/${
+  req.body.avatar = `/static/uploads/avatars/${
     req.user.name
   }-${Date.now()}.${extension}`;
 
   const image = await jimp.read(req.file.buffer);
   await image.resize(250, jimp.AUTO);
-  await image.write(`./${req.body.avatar}`);
+  await image.write(`./public/${req.body.avatar}`);
   next();
 };
 
 exports.updateUser = async (req, res) => {
+  console.log('updateUser');
   req.body.updatedAt = new Date().toISOString();
   const updatedUser = await User.findOneAndUpdate(
     { _id: req.user._id },
@@ -102,7 +103,7 @@ exports.deleteUser = async (req, res) => {
 
   if (!req.isAuthUser) {
     return res.status(400).json({
-      message: 'You are not authorized to perform this action'
+      message: 'You are not authorized to perform this action',
     });
   }
   const deletedUser = await User.findOneAndDelete({ _id: userId });

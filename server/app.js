@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const next = require('next');
 const session = require('express-session');
@@ -26,14 +27,14 @@ const mongooseOptions = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 };
 
 mongoose
   .connect(process.env.MONGO_URI, mongooseOptions)
   .then(() => console.log('DB connected'));
 
-mongoose.connection.on('error', err => {
+mongoose.connection.on('error', (err) => {
   console.log(`DB connection error: ${err.message}`);
 });
 
@@ -66,7 +67,7 @@ app.prepare().then(() => {
     secret: process.env.SESSION_SECRET,
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
-      ttl: 14 * 24 * 60 * 60 // save session for 14 days
+      ttl: 14 * 24 * 60 * 60, // save session for 14 days
     }),
     // forces the session to be saved back to the store
     resave: false,
@@ -74,8 +75,8 @@ app.prepare().then(() => {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 14 // expires in 14 days
-    }
+      maxAge: 1000 * 60 * 60 * 24 * 14, // expires in 14 days
+    },
   };
 
   if (!dev) {
@@ -100,7 +101,7 @@ app.prepare().then(() => {
   - we use skip to ignore static files from _next folder */
   server.use(
     logger('dev', {
-      skip: req => req.url.includes('_next')
+      skip: (req) => req.url.includes('_next'),
     })
   );
 
@@ -127,7 +128,7 @@ app.prepare().then(() => {
     handle(req, res);
   });
 
-  server.listen(port, err => {
+  server.listen(port, (err) => {
     if (err) throw err;
     console.log(`Server listening on ${ROOT_URL}`);
   });

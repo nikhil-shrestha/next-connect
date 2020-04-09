@@ -19,31 +19,32 @@ import FaceTwoTone from '@material-ui/icons/FaceTwoTone';
 import EditSharp from '@material-ui/icons/EditSharp';
 
 import { authInitialProps } from '../lib/auth';
-import { getAuthUser } from '../lib/api';
+import { getAuthUser, updateUser } from '../lib/api';
 
 export default function EditProfile(props) {
   const classes = useStyles();
   const { auth } = props;
 
-  const [user, setUser] = useState({
+  const [formData, setFormData] = useState({
     _id: '',
     name: '',
     email: '',
     about: '',
     avatar: '',
   });
-  const userFormData = new FormData();
+  const [image, setImage] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [avatarPreview, setAvatarPreview] = useState('');
 
-  const { name, email, about, avatar } = user;
+  const { name, email, about, avatar } = formData;
 
   useEffect(() => {
     async function loadUser() {
       try {
         const userData = await getAuthUser(auth.user._id);
-        setUser({
-          ...user,
+        setFormData({
+          ...formData,
           ...userData,
         });
         setIsLoading(false);
@@ -55,25 +56,41 @@ export default function EditProfile(props) {
     loadUser();
   }, []);
 
+  const onChangePicture = (e) => {
+    console.log('picture: ', image);
+    const inputValue = e.target.files[0];
+    setImage(inputValue);
+    setAvatarPreview(createPreviewImage(inputValue));
+  };
+
   const handleChange = (event) => {
-    const { name } = event.target;
-    let inputValue;
+    const { name, value } = event.target;
 
-    if (name === 'avatar') {
-      inputValue = event.target.files[0];
-      setAvatarPreview(createPreviewImage(inputValue));
-    } else {
-      inputValue = event.target.value;
-    }
-
-    userFormData.set(name, inputValue);
-    setUser({
-      ...user,
-      [name]: inputValue,
+    setFormData({
+      ...formData,
+      [name]: value,
     });
   };
 
   const createPreviewImage = (file) => URL.createObjectURL(file);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const userData = new FormData();
+
+    userData.append('name', name);
+    userData.append('email', email);
+    userData.append('about', about);
+    if (image) {
+      userData.append('avatar', image);
+    }
+
+    updateUser(formData._id, userData)
+      .then((updatedUser) => {
+        console.log(updatedUser);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className={classes.root}>
@@ -85,7 +102,7 @@ export default function EditProfile(props) {
           EDit Profile
         </Typography>
 
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={handleSubmit}>
           {isLoading ? (
             <Avatar className={classes.bigAvatar}>
               <FaceTwoTone />{' '}
@@ -101,7 +118,7 @@ export default function EditProfile(props) {
             id="avatar"
             name="avatar"
             accept="image/*"
-            onChange={handleChange}
+            onChange={onChangePicture}
             className={classes.input}
           />
           <label htmlFor="avatar" className={classes.uploadButton}>
