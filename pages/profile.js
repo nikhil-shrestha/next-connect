@@ -14,6 +14,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import Edit from '@material-ui/icons/Edit';
 
+import FollowUser from '../components/profile/FollowUser';
+
 import { authInitialProps } from '../lib/auth';
 import { getUser } from '../lib/api';
 
@@ -23,20 +25,35 @@ const Profile = props => {
   const [user, setUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
       try {
         const userData = await getUser(userId);
+        const followCheck = checkFollow(auth, userData);
         setUser(userData);
         setIsAuth(auth.user._id === userId);
         setIsLoading(false);
+        setIsFollowing(followCheck);
       } catch (err) {
         console.log(err);
       }
     }
     loadUser();
   }, [userId]);
+
+  const checkFollow = (auth, user) => {
+    return (
+      user.followers.findIndex(follower => follower._id === auth.user._id) > -1
+    );
+  };
+
+  const toggleFollow = sendRequest => {
+    sendRequest(userId).then(() => {
+      setIsFollowing(!isFollowing);
+    });
+  };
 
   return (
     <Paper className={classes.root} elevation={4}>
@@ -78,7 +95,10 @@ const Profile = props => {
                 </Link>
               </ListItemSecondaryAction>
             ) : (
-              <div>Follow</div>
+              <FollowUser
+                isFollowing={isFollowing}
+                toggleFollow={toggleFollow}
+              />
             )}
           </ListItem>
           <Divider />
