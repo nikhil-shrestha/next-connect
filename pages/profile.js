@@ -15,6 +15,7 @@ import Divider from '@material-ui/core/Divider';
 import Edit from '@material-ui/icons/Edit';
 
 import FollowUser from '../components/profile/FollowUser';
+import DeleteUser from '../components/profile/DeleteUser';
 
 import { authInitialProps } from '../lib/auth';
 import { getUser } from '../lib/api';
@@ -93,6 +94,7 @@ const Profile = props => {
                     </IconButton>
                   </a>
                 </Link>
+                <DeleteUser user={user} />
               </ListItemSecondaryAction>
             ) : (
               <FollowUser
