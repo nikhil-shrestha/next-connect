@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Router from 'next/router';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -26,7 +25,6 @@ const DeleteUser = (props) => {
     deleteUser(user._id)
       .then(() => {
         signoutUser();
-        Router.push('/signup');
       })
       .catch((err) => {
         console.log(err);
