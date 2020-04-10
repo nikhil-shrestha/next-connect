@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
@@ -14,6 +15,20 @@ import DeleteTwoTone from '@material-ui/icons/DeleteTwoTone';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
+function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
+}
+
 const Post = (props) => {
   const classes = useStyles();
   const {
@@ -23,6 +38,24 @@ const Post = (props) => {
     handleDeletePost,
     handleToggleLike,
   } = props;
+
+  const prevPostLikes = usePrevious(post.likes.length);
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [numLikes, setNumLikes] = useState(0);
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    if (prevPostLikes !== post.likes.length) {
+      setIsLiked(checkLiked(post.likes));
+      setNumLikes(post.likes.length);
+      return;
+    }
+    setIsLiked(checkLiked(post.likes));
+    setNumLikes(post.likes.length);
+  }, [prevPostLikes, post.likes.length]);
+
+  const checkLiked = (likes) => likes.includes(auth.user._id);
 
   const isPostedCreator = post.postedBy._id === auth.user._id;
   return (
@@ -63,8 +96,12 @@ const Post = (props) => {
           className={classes.button}
           onClick={() => handleToggleLike(post)}
         >
-          <Badge badgeContent={0} color="secondary">
-            <FavoriteBorder className={classes.favoriteIcon} />
+          <Badge badgeContent={numLikes} color="secondary">
+            {isLiked ? (
+              <Favorite className={classes.favoriteIcon} />
+            ) : (
+              <FavoriteBorder className={classes.favoriteIcon} />
+            )}
           </Badge>
         </IconButton>
         <IconButton className={classes.button}>
