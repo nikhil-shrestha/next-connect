@@ -40,6 +40,7 @@ const Post = (props) => {
     handleDeletePost,
     handleToggleLike,
     handleAddComment,
+    handleDeleteComment,
   } = props;
 
   const prevPostLikes = usePrevious(post.likes.length);
@@ -126,6 +127,7 @@ const Post = (props) => {
         postId={post._id}
         comments={comments}
         handleAddComment={handleAddComment}
+        handleDeleteComment={handleDeleteComment}
       />
     </Card>
   );

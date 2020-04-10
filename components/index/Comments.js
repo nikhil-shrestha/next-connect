@@ -10,7 +10,13 @@ import Delete from '@material-ui/icons/Delete';
 
 const Comments = (props) => {
   const classes = useStyles();
-  const { auth, postId, comments, handleAddComment } = props;
+  const {
+    auth,
+    postId,
+    comments,
+    handleAddComment,
+    handleDeleteComment,
+  } = props;
 
   const [text, setText] = useState('');
 
@@ -36,7 +42,11 @@ const Comments = (props) => {
         <span className={classes.commentDate}>
           {comment.createdAt}
           {isCommentCreator && (
-            <Delete color="secondary" className={classes.commentDelete} />
+            <Delete
+              color="secondary"
+              className={classes.commentDelete}
+              onClick={() => handleDeleteComment(postId, comment)}
+            />
           )}
         </span>
       </div>
