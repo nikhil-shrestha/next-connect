@@ -39,9 +39,11 @@ const Post = (props) => {
     isDeletingPost,
     handleDeletePost,
     handleToggleLike,
+    handleAddComment,
   } = props;
 
   const prevPostLikes = usePrevious(post.likes.length);
+  const prevComments = usePrevious(post.comments.length);
 
   const [isLiked, setIsLiked] = useState(false);
   const [numLikes, setNumLikes] = useState(0);
@@ -53,9 +55,14 @@ const Post = (props) => {
       setNumLikes(post.likes.length);
       return;
     }
+    if (prevComments !== post.comments.length) {
+      setComments(post.comments);
+      return;
+    }
     setIsLiked(checkLiked(post.likes));
     setNumLikes(post.likes.length);
-  }, [prevPostLikes, post.likes.length]);
+    setComments(post.comments);
+  }, [prevPostLikes, post.likes.length, prevComments, post.comments.length]);
 
   const checkLiked = (likes) => likes.includes(auth.user._id);
 
@@ -114,7 +121,12 @@ const Post = (props) => {
       </CardActions>
       <Divider />
       {/* Comment Area */}
-      <Comments auth={auth} postId={post._id} comments={comments} />
+      <Comments
+        auth={auth}
+        postId={post._id}
+        comments={comments}
+        handleAddComment={handleAddComment}
+      />
     </Card>
   );
 };

@@ -11,6 +11,7 @@ import {
   deletePost,
   likePost,
   unlikePost,
+  addComment,
 } from '../../lib/api';
 
 const PostFeed = (props) => {
@@ -110,6 +111,24 @@ const PostFeed = (props) => {
       });
   };
 
+  const handleAddComment = (postId, text) => {
+    const comment = { text };
+    addComment(postId, comment)
+      .then((postData) => {
+        const postIndex = posts.findIndex((post) => post._id === postData._id);
+
+        const updatedPosts = [
+          ...posts.slice(0, postIndex),
+          postData,
+          ...posts.slice(postIndex + 1),
+        ];
+        setPosts(updatedPosts);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className={classes.root}>
       <Typography
@@ -138,6 +157,7 @@ const PostFeed = (props) => {
           post={post}
           handleDeletePost={handleDeletePost}
           handleToggleLike={handleToggleLike}
+          handleAddComment={handleAddComment}
         />
       ))}
     </div>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -9,7 +10,19 @@ import Delete from '@material-ui/icons/Delete';
 
 const Comments = (props) => {
   const classes = useStyles();
-  const { auth, postId, comments } = props;
+  const { auth, postId, comments, handleAddComment } = props;
+
+  const [text, setText] = useState('');
+
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    handleAddComment(postId, text);
+    setText('');
+  };
 
   const showComment = (comment) => {
     const isCommentCreator = comment.postedBy._id === auth.user._id;
@@ -19,6 +32,7 @@ const Comments = (props) => {
           <a>{comment.postedBy.name}</a>
         </Link>
         <br />
+        {comment.text}
         <span className={classes.commentDate}>
           {comment.createdAt}
           {isCommentCreator && (
@@ -37,13 +51,15 @@ const Comments = (props) => {
           <Avatar className={classes.smallAvatar} src={auth.user.avatar} />
         }
         title={
-          <form>
+          <form onSubmit={handleSubmit}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="add-comment">Add Comments</InputLabel>
               <Input
                 id="add-comment"
                 name="text"
                 placeholder="Reply to this post"
+                onChange={handleChange}
+                value={text}
               />
             </FormControl>
           </form>
