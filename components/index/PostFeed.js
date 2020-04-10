@@ -5,7 +5,13 @@ import Typography from '@material-ui/core/Typography';
 import NewPost from './NewPost';
 import Post from './Post';
 
-import { addPost, getPostFeed, deletePost } from '../../lib/api';
+import {
+  addPost,
+  getPostFeed,
+  deletePost,
+  likePost,
+  unlikePost,
+} from '../../lib/api';
 
 const PostFeed = (props) => {
   const classes = useStyles();
@@ -85,6 +91,25 @@ const PostFeed = (props) => {
       });
   };
 
+  const handleToggleLike = (post) => {
+    const isPostLiked = post.likes.includes(auth.user._id);
+    const sendRequest = isPostLiked ? unlikePost : likePost;
+
+    sendRequest(post._id)
+      .then((postData) => {
+        const postIndex = posts.findIndex((post) => post._id === postData._id);
+        const updatedPosts = [
+          ...posts.slice(0, postIndex),
+          postData,
+          ...posts.slice(postIndex + 1),
+        ];
+        setPosts(updatedPosts);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className={classes.root}>
       <Typography
@@ -112,6 +137,7 @@ const PostFeed = (props) => {
           auth={auth}
           post={post}
           handleDeletePost={handleDeletePost}
+          handleToggleLike={handleToggleLike}
         />
       ))}
     </div>

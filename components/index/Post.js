@@ -16,7 +16,13 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
 const Post = (props) => {
   const classes = useStyles();
-  const { auth, post, isDeletingPost, handleDeletePost } = props;
+  const {
+    auth,
+    post,
+    isDeletingPost,
+    handleDeletePost,
+    handleToggleLike,
+  } = props;
 
   const isPostedCreator = post.postedBy._id === auth.user._id;
   return (
@@ -53,7 +59,10 @@ const Post = (props) => {
         )}
       </CardContent>
       <CardActions>
-        <IconButton className={classes.button}>
+        <IconButton
+          className={classes.button}
+          onClick={() => handleToggleLike(post)}
+        >
           <Badge badgeContent={0} color="secondary">
             <FavoriteBorder className={classes.favoriteIcon} />
           </Badge>
