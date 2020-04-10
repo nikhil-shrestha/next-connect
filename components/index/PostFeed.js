@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import NewPost from './NewPost';
 import Post from './Post';
 
-import { addPost, getPostFeed } from '../../lib/api';
+import { addPost, getPostFeed, deletePost } from '../../lib/api';
 
 const PostFeed = (props) => {
   const classes = useStyles();
@@ -16,6 +16,7 @@ const PostFeed = (props) => {
   const [text, setText] = useState('');
   const [image, setImage] = useState('');
   const [isAddingPost, setIsAddingPost] = useState(false);
+  const [isDeletingPost, setIsDeletingPost] = useState(false);
 
   useEffect(() => {
     async function getPost() {
@@ -65,6 +66,24 @@ const PostFeed = (props) => {
       });
   };
 
+  const handleDeletePost = (deletedPost) => {
+    setIsDeletingPost(true);
+    deletePost(deletedPost._id)
+      .then((postData) => {
+        const postIndex = posts.findIndex((post) => post._id === postData._id);
+
+        const updatedPosts = [
+          ...posts.slice(0, postIndex),
+          ...posts.slice(postIndex + 1),
+        ];
+        setPosts(updatedPosts);
+        setIsDeletingPost(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className={classes.root}>
       <Typography
@@ -81,12 +100,18 @@ const PostFeed = (props) => {
         text={text}
         image={image}
         isAddingPost={isAddingPost}
+        isDeletingPost={isDeletingPost}
         handleChange={handleChange}
         handleAddPost={handleAddPost}
       />
 
       {posts.map((post) => (
-        <Post key={post._id} auth={auth} post={post} />
+        <Post
+          key={post._id}
+          auth={auth}
+          post={post}
+          handleDeletePost={handleDeletePost}
+        />
       ))}
     </div>
   );

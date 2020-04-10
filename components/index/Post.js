@@ -16,7 +16,7 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
 const Post = (props) => {
   const classes = useStyles();
-  const { auth, post } = props;
+  const { auth, post, isDeletingPost, handleDeletePost } = props;
 
   const isPostedCreator = post.postedBy._id === auth.user._id;
   return (
@@ -25,7 +25,10 @@ const Post = (props) => {
         avatar={<Avatar src={post.postedBy.avatar} />}
         action={
           isPostedCreator && (
-            <IconButton>
+            <IconButton
+              disabled={isDeletingPost}
+              onClick={() => handleDeletePost(post)}
+            >
               <DeleteTwoTone color="secondary" />
             </IconButton>
           )

@@ -48,7 +48,9 @@ const UserFeed = (props) => {
       setUsers(updatedUsers);
       setOpenSuccess(true);
       setFollowingMsg(`Following ${fUser.name}`);
-    } catch (error) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   console.log(users);
