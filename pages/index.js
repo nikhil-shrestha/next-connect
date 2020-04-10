@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 
+import UserFeed from '../components/index/UserFeed';
+import PostFeed from '../components/index/PostFeed';
 import { authInitialProps } from '../lib/auth';
 
 export default function Index({ auth }) {
@@ -13,7 +15,23 @@ export default function Index({ auth }) {
   return (
     <main className={classes.root}>
       {auth.user && auth.user._id ? (
-        <div>Auth User Page</div>
+        <Grid container>
+          <Grid item xs={12} sm={12} md={7}>
+            <PostFeed auth={auth} />
+          </Grid>
+          <Grid item className={classes.drawerContainer}>
+            <Drawer
+              className={classes.drawer}
+              variant="permanent"
+              anchor="right"
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+            >
+              <UserFeed auth={auth} />
+            </Drawer>
+          </Grid>
+        </Grid>
       ) : (
         <Grid
           justify="center"
