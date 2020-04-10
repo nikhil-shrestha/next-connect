@@ -16,14 +16,17 @@ import Edit from '@material-ui/icons/Edit';
 
 import FollowUser from '../components/profile/FollowUser';
 import DeleteUser from '../components/profile/DeleteUser';
+import ProfileTabs from '../components/profile/ProfileTabs';
 
 import { authInitialProps } from '../lib/auth';
-import { getUser } from '../lib/api';
+import { getUser, getPostByUser } from '../lib/api';
 
-const Profile = props => {
+const Profile = (props) => {
   const classes = useStyles();
   const { userId, auth } = props;
+
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -37,6 +40,9 @@ const Profile = props => {
         setIsAuth(auth.user._id === userId);
         setIsLoading(false);
         setIsFollowing(followCheck);
+
+        const userPostsData = await getPostByUser(userId);
+        setPosts(userPostsData);
       } catch (err) {
         console.log(err);
       }
@@ -46,11 +52,12 @@ const Profile = props => {
 
   const checkFollow = (auth, user) => {
     return (
-      user.followers.findIndex(follower => follower._id === auth.user._id) > -1
+      user.followers.findIndex((follower) => follower._id === auth.user._id) >
+      -1
     );
   };
 
-  const toggleFollow = sendRequest => {
+  const toggleFollow = (sendRequest) => {
     sendRequest(userId).then(() => {
       setIsFollowing(!isFollowing);
     });
@@ -110,38 +117,41 @@ const Profile = props => {
               secondary={`Joined: ${user.createdAt}`}
             />
           </ListItem>
+
+          {/* Display user's posts,  following and Followers */}
+          <ProfileTabs auth={auth} user={user} posts={posts} />
         </List>
       )}
     </Paper>
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2 * 3),
     marginTop: theme.spacing(2 * 5),
     margin: 'auto',
     [theme.breakpoints.up('sm')]: {
-      width: 600
-    }
+      width: 600,
+    },
   },
   title: {
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   progress: {
-    margin: theme.spacing(2 * 2)
+    margin: theme.spacing(2 * 2),
   },
   progressContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   bigAvatar: {
     width: 60,
     height: 60,
-    margin: 10
-  }
+    margin: 10,
+  },
 }));
 
 Profile.getInitialProps = authInitialProps(true);
