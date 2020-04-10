@@ -19,7 +19,15 @@ import DeleteUser from '../components/profile/DeleteUser';
 import ProfileTabs from '../components/profile/ProfileTabs';
 
 import { authInitialProps } from '../lib/auth';
-import { getUser, getPostByUser } from '../lib/api';
+import {
+  getUser,
+  getPostByUser,
+  deletePost,
+  likePost,
+  unlikePost,
+  addComment,
+  deleteComment,
+} from '../lib/api';
 
 const Profile = (props) => {
   const classes = useStyles();
@@ -61,6 +69,78 @@ const Profile = (props) => {
     sendRequest(userId).then(() => {
       setIsFollowing(!isFollowing);
     });
+  };
+
+  const handleDeletePost = (deletedPost) => {
+    setIsDeletingPost(true);
+    deletePost(deletedPost._id)
+      .then((postData) => {
+        const postIndex = posts.findIndex((post) => post._id === postData._id);
+
+        const updatedPosts = [
+          ...posts.slice(0, postIndex),
+          ...posts.slice(postIndex + 1),
+        ];
+        setPosts(updatedPosts);
+        setIsDeletingPost(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleToggleLike = (post) => {
+    const isPostLiked = post.likes.includes(auth.user._id);
+    const sendRequest = isPostLiked ? unlikePost : likePost;
+
+    sendRequest(post._id)
+      .then((postData) => {
+        const postIndex = posts.findIndex((post) => post._id === postData._id);
+        const updatedPosts = [
+          ...posts.slice(0, postIndex),
+          postData,
+          ...posts.slice(postIndex + 1),
+        ];
+        setPosts(updatedPosts);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleAddComment = (postId, text) => {
+    const comment = { text };
+    addComment(postId, comment)
+      .then((postData) => {
+        const postIndex = posts.findIndex((post) => post._id === postData._id);
+
+        const updatedPosts = [
+          ...posts.slice(0, postIndex),
+          postData,
+          ...posts.slice(postIndex + 1),
+        ];
+        setPosts(updatedPosts);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleDeleteComment = (postId, comment) => {
+    deleteComment(postId, comment)
+      .then((postData) => {
+        const postIndex = posts.findIndex((post) => post._id === postData._id);
+
+        const updatedPosts = [
+          ...posts.slice(0, postIndex),
+          postData,
+          ...posts.slice(postIndex + 1),
+        ];
+        setPosts(updatedPosts);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -119,7 +199,15 @@ const Profile = (props) => {
           </ListItem>
 
           {/* Display user's posts,  following and Followers */}
-          <ProfileTabs auth={auth} user={user} posts={posts} />
+          <ProfileTabs
+            auth={auth}
+            user={user}
+            posts={posts}
+            handleDeletePost={handleDeletePost}
+            handleToggleLike={handleToggleLike}
+            handleAddComment={handleAddComment}
+            handleDeleteComment={handleDeleteComment}
+          />
         </List>
       )}
     </Paper>

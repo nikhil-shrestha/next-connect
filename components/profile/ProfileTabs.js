@@ -9,7 +9,15 @@ import Post from '../index/Post';
 const ProfileTabs = (props) => {
   const [tab, setTab] = useState(0);
 
-  const { posts, user, auth } = props;
+  const {
+    posts,
+    user,
+    auth,
+    handleDeletePost,
+    handleToggleLike,
+    handleAddComment,
+    handleDeleteComment,
+  } = props;
 
   const handleTabChange = (event, value) => setTab(value);
 
@@ -31,7 +39,15 @@ const ProfileTabs = (props) => {
       {tab === 0 && (
         <TabContainer>
           {posts.map((post) => (
-            <Post key={post._id} post={post} auth={auth} />
+            <Post
+              key={post._id}
+              auth={auth}
+              post={post}
+              handleDeletePost={handleDeletePost}
+              handleToggleLike={handleToggleLike}
+              handleAddComment={handleAddComment}
+              handleDeleteComment={handleDeleteComment}
+            />
           ))}
         </TabContainer>
       )}

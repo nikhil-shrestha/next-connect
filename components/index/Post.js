@@ -115,7 +115,7 @@ const Post = (props) => {
           </Badge>
         </IconButton>
         <IconButton className={classes.button}>
-          <Badge badgeContent={0} color="primary">
+          <Badge badgeContent={comments.length} color="primary">
             <Comment className={classes.commentIcon} />
           </Badge>
         </IconButton>
