@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import NewPost from './NewPost';
 import Post from './Post';
 
-import { addPost } from '../../lib/api';
+import { addPost, getPostFeed } from '../../lib/api';
 
 const PostFeed = (props) => {
   const classes = useStyles();
@@ -16,6 +16,18 @@ const PostFeed = (props) => {
   const [text, setText] = useState('');
   const [image, setImage] = useState('');
   const [isAddingPost, setIsAddingPost] = useState(false);
+
+  useEffect(() => {
+    async function getPost() {
+      try {
+        const postsData = await getPostFeed(auth.user._id);
+        setPosts(postsData);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getPost();
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
@@ -72,6 +84,10 @@ const PostFeed = (props) => {
         handleChange={handleChange}
         handleAddPost={handleAddPost}
       />
+
+      {posts.map((post) => (
+        <Post key={post._id} auth={auth} post={post} />
+      ))}
     </div>
   );
 };
