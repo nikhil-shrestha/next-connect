@@ -13,7 +13,14 @@ import AddAPhoto from '@material-ui/icons/AddAPhoto';
 const NewPost = (props) => {
   const classes = useStyles();
 
-  const { auth, text, image, handleChange } = props;
+  const {
+    auth,
+    text,
+    image,
+    isAddingPost,
+    handleChange,
+    handleAddPost,
+  } = props;
 
   return (
     <Card className={classes.card}>
@@ -61,10 +68,11 @@ const NewPost = (props) => {
         <Button
           color="primary"
           variant="contained"
-          disabled={!text}
+          disabled={!text || isAddingPost}
           className={classes.submit}
+          onClick={handleAddPost}
         >
-          Post
+          {isAddingPost ? 'Sending...' : 'Post'}
         </Button>
       </CardActions>
     </Card>
