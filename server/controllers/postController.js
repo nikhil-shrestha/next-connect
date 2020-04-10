@@ -8,7 +8,7 @@ const avatarUploadOptions = {
   storage: multer.memoryStorage(),
   limits: {
     // storing image file upto 1MB
-    fileSize: 1024 * 1024 * 1
+    fileSize: 1024 * 1024 * 1,
   },
   fileFilter: (req, file, next) => {
     if (file.mimetype.startsWith('image/')) {
@@ -16,7 +16,7 @@ const avatarUploadOptions = {
     } else {
       next(null, false);
     }
-  }
+  },
 };
 
 exports.uploadImage = multer(avatarUploadOptions).single('image');
@@ -27,13 +27,13 @@ exports.resizeImage = async (req, res, next) => {
   }
 
   const extension = req.file.mimetype.split('/')[1];
-  req.body.avatar = `/public/static/uploads/avatars/${
+  req.body.image = `/static/uploads/posts/${
     req.user.name
   }-${Date.now()}.${extension}`;
 
   const image = await jimp.read(req.file.buffer);
   await image.resize(750, jimp.AUTO);
-  await image.write(`./${req.body.avatar}`);
+  await image.write(`./public/${req.body.image}`);
   next();
 };
 
@@ -44,7 +44,7 @@ exports.addPost = async (req, res) => {
 
   await Post.populate(post, {
     path: 'postedBy',
-    select: '_id name avatar'
+    select: '_id name avatar',
   });
   res.json(post);
 };
@@ -65,7 +65,7 @@ exports.deletePost = async (req, res) => {
   const { _id } = req.post;
   if (!req.isPoster) {
     return res.status(400).json({
-      message: 'You are not authorized to perform this action'
+      message: 'You are not authorized to perform this action',
     });
   }
   const deletedPost = await Post.findOneAndDelete({ _id });
@@ -74,7 +74,7 @@ exports.deletePost = async (req, res) => {
 
 exports.getPostsByUser = async (req, res) => {
   const posts = await Post.find({ postedBy: req.profile._id }).sort({
-    createdAt: 'desc'
+    createdAt: 'desc',
   });
 
   res.json(posts);
@@ -84,7 +84,7 @@ exports.getPostFeed = async (req, res) => {
   const { following, _id } = req.profile;
   following.push(_id);
   const posts = await Post.find({ postedBy: { $in: following } }).sort({
-    createdAt: 'desc'
+    createdAt: 'desc',
   });
   res.json(posts);
 };
@@ -93,7 +93,7 @@ exports.toggleLike = async (req, res) => {
   const { postId } = req.body;
 
   const post = await Post.findOne({ _id: postId });
-  const likeIds = post.likes.map(id => id.toString());
+  const likeIds = post.likes.map((id) => id.toString());
   const authUserId = req.user._id.toString();
   if (likeIds.includes(authUserId)) {
     await post.likes.pull(authUserId);

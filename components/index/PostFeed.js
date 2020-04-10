@@ -54,6 +54,7 @@ const PostFeed = (props) => {
 
     addPost(auth.user._id, postData)
       .then((postData) => {
+        console.log({ postData });
         const updatedPost = [postData, ...posts];
         setPosts(updatedPost);
         setIsAddingPost(false);
