@@ -68,7 +68,7 @@ export default function Index({ auth }) {
             className={classes.fabButton}
             variant="contained"
             color="primary"
-            onClick={() => Router.pus('/signup')}
+            onClick={() => Router.push('/signup')}
           >
             Get Started
           </Button>
